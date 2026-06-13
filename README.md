@@ -62,22 +62,50 @@ VITE_API_BASE_URL=http://localhost:8080/api
 VITE_APP_NAME=SkillSync
 ```
 
-## Project Structure
 
-```
+## 📁 Project Structure
+
+```text
 src/
-├── assets/
-├── components/
-├── features/
-│   ├── auth/
-│   ├── mentor/
-│   ├── student/
-│   └── session/
-├── hooks/
-├── services/
-├── lib/
-├── routes/
-├── styles/
+├── assets/              # Static assets (images, icons, fonts)
+├── components/          # Shared reusable UI components
+│   ├── ui/              # Base UI components (Button, Input, Modal)
+│   └── layout/         # Layout components (Navbar, Sidebar, etc.)
+│
+├── features/            # Feature-based modules (core architecture)
+│   ├── auth/            # Login, register, auth hooks, API, pages
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── api/
+│   │   ├── pages/
+│   │   └── types.ts
+│   │
+│   ├── mentor/         # Mentor browsing & availability
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── api/
+│   │   ├── pages/
+│   │   └── types.ts
+│   │
+│   ├── student/        # Student dashboard & sessions
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── api/
+│   │   ├── pages/
+│   │   └── types.ts
+│   │
+│   └── session/        # Booking & session management
+│       ├── components/
+│       ├── hooks/
+│       ├── api/
+│       ├── pages/
+│       └── types.ts
+│
+├── hooks/              # Global custom hooks (useDebounce, etc.)
+├── services/           # Shared API layer setup (axios client, interceptors)
+├── lib/                # Utilities (helpers, formatters, constants)
+├── routes/             # App routing configuration
+├── styles/             # Global styles (Tailwind, CSS)
 ├── App.tsx
 └── main.tsx
 ```
