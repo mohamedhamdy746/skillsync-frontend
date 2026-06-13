@@ -1,0 +1,55 @@
+{
+  "app.name": "SkillSync",
+  "app.tagline": "Academic Mentorship & Code Review Platform",
+
+  "nav.discover": "Discover",
+  "nav.dashboard": "Dashboard",
+  "nav.admin": "Admin",
+  "nav.profile": "Profile",
+  "nav.signIn": "Sign In",
+  "nav.getStarted": "Get Started",
+  "nav.logout": "Logout",
+
+  "auth.signIn": "Sign In",
+  "auth.signInSubtitle": "Welcome back to SkillSync",
+  "auth.createAccount": "Create Account",
+  "auth.createAccountSubtitle": "Join SkillSync as a Student or Mentor",
+  "auth.email": "Email",
+  "auth.password": "Password",
+  "auth.name": "Full Name",
+  "auth.role": "Role",
+  "auth.student": "Student",
+  "auth.mentor": "Mentor",
+
+  "mentor.discover": "Find Your Mentor",
+  "mentor.discoverSubtitle": "Browse expert mentors and book code review sessions",
+  "mentor.profile": "Mentor Profile",
+  "mentor.dashboard": "Mentor Dashboard",
+  "mentor.dashboardSubtitle": "Manage your availability and review sessions",
+
+  "student.dashboard": "Student Dashboard",
+  "student.dashboardSubtitle": "Track your sessions and review feedback",
+
+  "admin.dashboard": "Admin Dashboard",
+  "admin.dashboardSubtitle": "Manage users, stacks, and platform settings",
+
+  "profile.title": "Profile",
+  "profile.subtitle": "Customize your SkillSync profile",
+
+  "common.loading": "Loading...",
+  "common.error": "Something went wrong",
+  "common.retry": "Try Again",
+  "common.save": "Save",
+  "common.cancel": "Cancel",
+  "common.delete": "Delete",
+  "common.edit": "Edit",
+  "common.search": "Search...",
+  "common.noResults": "No results found",
+  "common.backToHome": "Back to Home",
+
+  "error.notFound": "Page Not Found",
+  "error.notFoundSubtitle": "The page you're looking for doesn't exist or has been moved.",
+
+  "theme.dark": "Dark Mode",
+  "theme.light": "Light Mode"
+}

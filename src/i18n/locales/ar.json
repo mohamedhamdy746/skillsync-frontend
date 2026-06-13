@@ -1,0 +1,55 @@
+{
+  "app.name": "سكيل سينك",
+  "app.tagline": "منصة الإرشاد الأكاديمي ومراجعة الكود",
+
+  "nav.discover": "اكتشف",
+  "nav.dashboard": "لوحة التحكم",
+  "nav.admin": "الإدارة",
+  "nav.profile": "الملف الشخصي",
+  "nav.signIn": "تسجيل الدخول",
+  "nav.getStarted": "ابدأ الآن",
+  "nav.logout": "تسجيل الخروج",
+
+  "auth.signIn": "تسجيل الدخول",
+  "auth.signInSubtitle": "مرحباً بعودتك إلى سكيل سينك",
+  "auth.createAccount": "إنشاء حساب",
+  "auth.createAccountSubtitle": "انضم إلى سكيل سينك كطالب أو مرشد",
+  "auth.email": "البريد الإلكتروني",
+  "auth.password": "كلمة المرور",
+  "auth.name": "الاسم الكامل",
+  "auth.role": "الدور",
+  "auth.student": "طالب",
+  "auth.mentor": "مرشد",
+
+  "mentor.discover": "ابحث عن مرشدك",
+  "mentor.discoverSubtitle": "تصفح المرشدين الخبراء واحجز جلسات مراجعة الكود",
+  "mentor.profile": "الملف الشخصي للمرشد",
+  "mentor.dashboard": "لوحة تحكم المرشد",
+  "mentor.dashboardSubtitle": "إدارة التوفر ومراجعة الجلسات",
+
+  "student.dashboard": "لوحة تحكم الطالب",
+  "student.dashboardSubtitle": "تتبع جلساتك ومراجعة التعليقات",
+
+  "admin.dashboard": "لوحة تحكم الإدارة",
+  "admin.dashboardSubtitle": "إدارة المستخدمين والتقنيات وإعدادات المنصة",
+
+  "profile.title": "الملف الشخصي",
+  "profile.subtitle": "تخصيص ملفك الشخصي على سكيل سينك",
+
+  "common.loading": "جاري التحميل...",
+  "common.error": "حدث خطأ",
+  "common.retry": "حاول مرة أخرى",
+  "common.save": "حفظ",
+  "common.cancel": "إلغاء",
+  "common.delete": "حذف",
+  "common.edit": "تعديل",
+  "common.search": "بحث...",
+  "common.noResults": "لا توجد نتائج",
+  "common.backToHome": "العودة للرئيسية",
+
+  "error.notFound": "الصفحة غير موجودة",
+  "error.notFoundSubtitle": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+
+  "theme.dark": "الوضع الداكن",
+  "theme.light": "الوضع الفاتح"
+}
