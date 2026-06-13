@@ -1,0 +1,10 @@
+/*
+ * SkillSync Typography — Google Fonts
+ *
+ * Fonts are loaded via <link> preconnect in index.html.
+ * This file defines font-face fallbacks and ensures the fonts are available.
+ *
+ * Playfair Display: Headlines & editorial feel (always italic per DESIGN.md)
+ * Hanken Grotesk:   UI & body text, optimized for dark-mode legibility
+ * Geist:            Code snippets, diffs, and technical metadata
+ */
