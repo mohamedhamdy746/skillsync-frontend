@@ -30,14 +30,9 @@ export function useLogin() {
   });
 }
 
-/** Register mutation — sets auth state on success. */
+/** Register mutation. */
 export function useRegister() {
-  const { setAuth } = useAuthStore();
-
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
-    onSuccess: (data) => {
-      setAuth(data.user, data.token);
-    },
   });
 }

@@ -16,6 +16,9 @@ export interface RegisterPayload {
   email: string;
   password: string;
   role: RoleType;
+  title?: string;
+  hourlyRate?: number;
+  bio?: string;
 }
 
 /** Response from login/register endpoints */

@@ -1,23 +1,14 @@
-/**
- * RegisterPage — Onboarding portal with role selection.
- *
- * TODO: Implement registration form with:
- * - Name, email, password fields (react-hook-form + zod)
- * - Role selection (Student / Mentor)
- * - useRegister() mutation hook
- * - Redirect to dashboard on success
- */
+import { AuthBanner, RegisterForm } from "../index";
+
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="w-full max-w-md rounded-xl border border-border bg-surface p-8">
-        <h1 className="font-display text-headline-md italic text-text-primary">
-          Create Account
-        </h1>
-        <p className="mt-2 font-body text-body-md text-text-secondary">
-          Join SkillSync as a Student or Mentor
-        </p>
-        {/* TODO: Registration form implementation */}
+    <div className="mx-auto w-full max-w-[1600px] flex-1 grid grid-cols-1 lg:grid-cols-2 bg-canvas text-on-surface">
+      {/* Left Column: Brand & Identity */}
+      <AuthBanner />
+
+      {/* Right Column: Registration */}
+      <div className="flex items-center justify-center px-8 py-12 lg:py-16 bg-canvas relative z-20">
+        <RegisterForm />
       </div>
     </div>
   );

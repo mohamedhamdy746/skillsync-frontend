@@ -12,8 +12,10 @@
 
   "auth.signIn": "Sign In",
   "auth.signInSubtitle": "Welcome back to SkillSync",
+  "auth.signInSuccess": "Logged in successfully!",
   "auth.createAccount": "Create Account",
   "auth.createAccountSubtitle": "Join SkillSync as a Student or Mentor",
+  "auth.createAccountSuccess": "Account created successfully!",
   "auth.email": "Email",
   "auth.password": "Password",
   "auth.name": "Full Name",

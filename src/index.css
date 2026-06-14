@@ -1,7 +1,87 @@
 @import "tailwindcss";
 @import "./styles/fonts.css";
 
-@config "../tailwind.config.ts";
+@theme {
+  --color-canvas: #0b0a09;
+  --color-surface: #161412;
+  --color-surface-dim: #121413;
+  --color-surface-bright: #383939;
+  --color-surface-container-lowest: #0d0e0e;
+  --color-surface-container-low: #1a1c1c;
+  --color-surface-container: #1e2020;
+  --color-surface-container-high: #292a2a;
+  --color-surface-container-highest: #343535;
+  --color-surface-tint: #ffb4a3;
+  --color-surface-variant: #343535;
+  
+  --color-ember: #ff5e3a;
+  
+  --color-primary: #ffb4a3;
+  --color-primary-container: #ff5e3a;
+  --color-primary-fixed: #ffdad2;
+  --color-primary-fixed-dim: #ffb4a3;
+  
+  --color-on-primary: #630f00;
+  --color-on-primary-container: #5c0e00;
+  --color-on-primary-fixed: #3d0600;
+  --color-on-primary-fixed-variant: #8b1a00;
+  
+  --color-inverse-primary: #b42907;
+  
+  --color-secondary: #cbc5c2;
+  --color-secondary-container: #4c4846;
+  --color-secondary-fixed: #e8e1dd;
+  --color-secondary-fixed-dim: #cbc5c2;
+  
+  --color-on-secondary: #33302e;
+  --color-on-secondary-container: #bdb7b4;
+  --color-on-secondary-fixed: #1d1b19;
+  --color-on-secondary-fixed-variant: #494644;
+  
+  --color-tertiary: #cac6c3;
+  --color-tertiary-container: #979391;
+  --color-tertiary-fixed: #e6e1df;
+  --color-tertiary-fixed-dim: #cac6c3;
+  
+  --color-on-tertiary: #32302f;
+  --color-on-tertiary-container: #2e2c2b;
+  --color-on-tertiary-fixed: #1d1b1a;
+  --color-on-tertiary-fixed-variant: #484645;
+  
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+  
+  --color-on-surface: #e3e2e1;
+  --color-on-surface-variant: #e3beb6;
+  --color-inverse-surface: #e3e2e1;
+  --color-inverse-on-surface: #2f3130;
+  
+  --color-outline: #aa8982;
+  --color-outline-variant: #5a413b;
+  
+  --color-text-primary: #f9f8f7;
+  --color-text-secondary: #a3a19f;
+  --color-border: #2a2826;
+
+  --spacing-margin-desktop: 64px;
+  --spacing-margin-mobile: 20px;
+  --spacing-gutter: 24px;
+  
+  --radius-lg: 4px;
+  --radius-xl: 8px;
+  --radius-full: 9999px;
+
+  --shadow-ember: 0 0 20px 0 rgba(255, 94, 58, 0.15);
+  --shadow-ember-md: 0 0 30px 0 rgba(255, 94, 58, 0.2);
+
+  --font-display: "Playfair Display", serif;
+  --font-body: "Hanken Grotesk", sans-serif;
+  --font-code: "Geist", monospace;
+  
+  --max-width-container: 1280px;
+}
 
 /* ─── Global Resets ────────────────────────────────────────────────── */
 

@@ -12,8 +12,10 @@
 
   "auth.signIn": "تسجيل الدخول",
   "auth.signInSubtitle": "مرحباً بعودتك إلى سكيل سينك",
+  "auth.signInSuccess": "تم تسجيل الدخول بنجاح!",
   "auth.createAccount": "إنشاء حساب",
   "auth.createAccountSubtitle": "انضم إلى سكيل سينك كطالب أو مرشد",
+  "auth.createAccountSuccess": "تم إنشاء الحساب بنجاح!",
   "auth.email": "البريد الإلكتروني",
   "auth.password": "كلمة المرور",
   "auth.name": "الاسم الكامل",

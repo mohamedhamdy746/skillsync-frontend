@@ -1,23 +1,14 @@
-/**
- * LoginPage — Unified authentication view.
- *
- * TODO: Implement login form with:
- * - Email & password fields (react-hook-form + zod validation)
- * - useLogin() mutation hook
- * - Error toast on failure
- * - Redirect to intended route on success
- */
+import { AuthBanner, LoginForm } from "../index";
+
 export default function LoginPage() {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="w-full max-w-md rounded-xl border border-border bg-surface p-8">
-        <h1 className="font-display text-headline-md italic text-text-primary">
-          Sign In
-        </h1>
-        <p className="mt-2 font-body text-body-md text-text-secondary">
-          Welcome back to SkillSync
-        </p>
-        {/* TODO: Login form implementation */}
+    <div className="mx-auto w-full max-w-[1600px] flex-1 grid grid-cols-1 lg:grid-cols-2 bg-canvas text-on-surface">
+      {/* Left Column: Brand & Identity */}
+      <AuthBanner />
+
+      {/* Right Column: Sign In */}
+      <div className="flex items-center justify-center px-8 bg-canvas relative z-20">
+        <LoginForm />
       </div>
     </div>
   );
