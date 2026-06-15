@@ -6,17 +6,8 @@ import type {
   UpdateSessionPayload,
 } from "../types";
 
-/**
- * Session API endpoints.
- *
- * POST /api/sessions/book          → Book a new session
- * GET  /api/sessions               → List user's sessions
- * PUT  /api/sessions/:id/status    → Update session status / add evaluation
- * GET  /api/sessions/:id/audit     → Fetch session audit log
- */
-
 export async function bookSession(payload: BookingPayload): Promise<Session> {
-  const { data } = await apiClient.post<Session>("/sessions/book", payload);
+  const { data } = await apiClient.post<Session>("/sessions", payload);
   return data;
 }
 
@@ -25,20 +16,15 @@ export async function getSessions(): Promise<Session[]> {
   return data;
 }
 
-export async function updateSessionStatus(
+export async function updateSession(
   sessionId: number,
   payload: UpdateSessionPayload,
 ): Promise<Session> {
-  const { data } = await apiClient.put<Session>(
-    `/sessions/${sessionId}/status`,
-    payload,
-  );
+  const { data } = await apiClient.put<Session>(`/sessions/${sessionId}`, payload);
   return data;
 }
 
-export async function getSessionAudit(sessionId: number): Promise<AuditLog[]> {
-  const { data } = await apiClient.get<AuditLog[]>(
-    `/sessions/${sessionId}/audit`,
-  );
+export async function getSessionAudit(sessionId: number): Promise<AuditLog> {
+  const { data } = await apiClient.get<AuditLog>(`/sessions/${sessionId}/audit-log`);
   return data;
 }
