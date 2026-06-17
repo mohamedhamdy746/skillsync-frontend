@@ -1,0 +1,129 @@
+import { useParams, Link } from "react-router-dom";
+import { useMentorDetail } from "../hooks/useAdmin";
+import { Card } from "@/components/ui/Card";
+import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
+import { ArrowLeft } from "lucide-react";
+
+export default function AdminMentorDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const mentorId = Number(id);
+  const { data: mentor, isLoading, error } = useMentorDetail(mentorId);
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-container px-gutter py-8">
+        <SkeletonLine className="w-48" />
+        <Skeleton className="mt-4 h-10 w-64" />
+        <Skeleton className="mt-6 h-40 w-full" />
+      </div>
+    );
+  }
+
+  if (error || !mentor) {
+    return (
+      <div className="mx-auto max-w-container px-gutter py-8">
+        <Link to="/admin/mentors" className="inline-flex items-center gap-1.5 font-body text-body-md text-primary hover:underline">
+          <ArrowLeft className="h-4 w-4" /> Back to Mentors
+        </Link>
+        <Card className="mt-6 p-8 text-center">
+          <p className="font-body text-body-lg text-text-secondary">Mentor not found.</p>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-container px-gutter py-8">
+      <Link to="/admin/mentors" className="inline-flex items-center gap-1.5 font-body text-body-md text-primary hover:underline">
+        <ArrowLeft className="h-4 w-4" /> Back to Mentors
+      </Link>
+
+      <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="font-display text-display-lg-mobile italic text-text-primary md:text-display-lg">
+            {mentor.displayName}
+          </h1>
+          <p className="mt-1 font-body text-body-lg text-text-secondary">{mentor.email}</p>
+          <p className="mt-0.5 font-body text-body-md text-text-secondary">{mentor.title}</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <span className="font-body text-label-caps uppercase tracking-widest text-text-secondary">Rating</span>
+            <p className="font-display text-headline-md italic text-text-primary">{mentor.rating != null ? mentor.rating.toFixed(1) : "—"}</p>
+          </div>
+          <div className="text-right">
+            <span className="font-body text-label-caps uppercase tracking-widest text-text-secondary">Rate</span>
+            <p className="font-display text-headline-md italic text-text-primary">${mentor.hourlyRate}/hr</p>
+          </div>
+          <div className="text-right">
+            <span className="font-body text-label-caps uppercase tracking-widest text-text-secondary">Sessions</span>
+            <p className="font-display text-headline-md italic text-text-primary">{mentor.totalSessions}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-2">
+        <span className={`inline-block rounded-full px-3 py-1 text-label-caps uppercase tracking-wider ${mentor.available ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
+          {mentor.available ? "Available for Booking" : "Unavailable"}
+        </span>
+        <span className="ml-3 inline-block rounded-full bg-surface-container-low px-3 py-1 text-label-caps uppercase tracking-wider text-text-secondary">
+          {mentor.stackName}
+        </span>
+      </div>
+
+      <Card className="mt-6 p-6">
+        <h2 className="font-display text-headline-md italic text-text-primary">About</h2>
+        <p className="mt-3 font-body text-body-md text-text-secondary leading-relaxed">{mentor.bio}</p>
+      </Card>
+
+      <section className="mt-10">
+        <h2 className="font-display text-headline-md italic text-text-primary">
+          Session History ({mentor.sessions.length})
+        </h2>
+        <div className="mt-4">
+          {mentor.sessions.length === 0 ? (
+            <Card className="p-8 text-center">
+              <p className="font-body text-body-lg text-text-secondary">No sessions yet.</p>
+            </Card>
+          ) : (
+            <div className="overflow-x-auto rounded-xl border border-border">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border bg-surface-container-low">
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Student</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Date</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Status</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mentor.sessions.map((session) => (
+                    <tr key={session.id} className="border-b border-border last:border-b-0 hover:bg-surface-container-low">
+                      <td className="px-4 py-3">
+                        <div className="font-medium text-text-primary">{session.studentName}</div>
+                        <div className="text-code-sm text-text-secondary">{session.studentEmail}</div>
+                      </td>
+                      <td className="px-4 py-3 font-body text-body-md text-text-secondary">
+                        {new Date(session.startTime).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-label-caps uppercase tracking-wider ${
+                          session.status === "COMPLETED" ? "bg-success/10 text-success" :
+                          session.status === "SCHEDULED" ? "bg-info/10 text-info" :
+                          "bg-warning/10 text-warning"
+                        }`}>
+                          {session.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-body text-body-md text-text-secondary max-w-xs truncate">{session.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
