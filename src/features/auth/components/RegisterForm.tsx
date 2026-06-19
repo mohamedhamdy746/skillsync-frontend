@@ -144,14 +144,14 @@ export function RegisterForm() {
           SkillSync
         </Link>
         <h1 className="font-display text-[32px] leading-[1.2] italic text-text-primary mt-2">
-          Elevate your craft.
+          {t("auth.elevateYourCraft")}
         </h1>
       </div>
 
       {/* Registration Card */}
       <div className="w-full max-w-[500px] rounded-xl border border-border p-8 lg:p-10 bg-surface/80 shadow-2xl backdrop-blur-sm">
         <h2 className="font-display text-[24px] font-semibold text-text-primary mb-6">
-          Join Scholar's Night
+          {t("auth.joinScholarsNight")}
         </h2>
 
         {/* Role Selector Segmented Control */}
@@ -170,7 +170,7 @@ export function RegisterForm() {
             role="tab"
             aria-selected={selectedRole === "STUDENT"}
           >
-            I'M A STUDENT
+            {t("auth.imStudent")}
           </button>
           <button
             type="button"
@@ -183,7 +183,7 @@ export function RegisterForm() {
             role="tab"
             aria-selected={selectedRole === "MENTOR"}
           >
-            I'M A MENTOR
+            {t("auth.imMentor")}
           </button>
         </div>
 
@@ -191,14 +191,14 @@ export function RegisterForm() {
           {/* Common Fields */}
           <div className="space-y-4">
             <Input
-              label="Full Name"
+              label={t("auth.fullName")}
               placeholder="Ada Lovelace"
               error={errors.name?.message}
               {...register("name")}
             />
 
             <Input
-              label="Email Address"
+              label={t("auth.emailAddress")}
               type="email"
               placeholder="ada@analytical-engine.org"
               error={errors.email?.message}
@@ -207,7 +207,7 @@ export function RegisterForm() {
 
             <div className="space-y-2">
               <Input
-                label="Password"
+                label={t("auth.password")}
                 type="password"
                 placeholder="••••••••"
                 error={errors.password?.message}
@@ -248,7 +248,7 @@ export function RegisterForm() {
             </div>
 
             <Input
-              label="Confirm Password"
+              label={t("auth.confirmPassword")}
               type="password"
               placeholder="••••••••"
               error={errors.confirmPassword?.message}
@@ -260,7 +260,7 @@ export function RegisterForm() {
           {selectedRole === "MENTOR" && (
             <div className="pt-4 border-t border-border space-y-4 transition-all duration-300">
               <Input
-                label="Title / Specialty"
+                label={t("auth.titleSpecialty")}
                 placeholder="Senior Distributed Systems Engineer"
                 error={errors.title?.message}
                 {...register("title")}
@@ -268,7 +268,7 @@ export function RegisterForm() {
 
               <div className="space-y-1.5">
                 <label className="font-body text-label-caps uppercase tracking-widest text-text-secondary">
-                  Tech Stack Mastery
+                  {t("auth.techStackMastery")}
                 </label>
                 <div className="flex flex-wrap gap-2 pt-1">
                   <span className="px-3 py-1 rounded bg-[#2a2826] text-[#a3a19f] font-body text-label-caps text-[10px] tracking-wider border border-[#2a2826] cursor-pointer hover:border-primary-container transition-colors">
@@ -292,7 +292,7 @@ export function RegisterForm() {
               <div className="flex gap-4">
                 <div className="w-1/2">
                   <Input
-                    label="Hourly Rate ($)"
+                    label={t("auth.hourlyRate")}
                     type="number"
                     placeholder="150"
                     error={errors.hourlyRate?.message}
@@ -306,11 +306,11 @@ export function RegisterForm() {
                   htmlFor="bio"
                   className="font-body text-label-caps uppercase tracking-widest text-text-secondary"
                 >
-                  Academic Bio
+                  {t("auth.academicBio")}
                 </label>
                 <textarea
                   id="bio"
-                  placeholder="Detail your experience in guiding complex technical discourse..."
+                  placeholder={t("auth.bioPlaceholder")}
                   rows={3}
                   className="w-full rounded bg-surface px-4 py-3 font-body text-body-md text-text-primary border-b-2 border-text-secondary/30 outline-none transition-all duration-200 focus:border-ember focus:-translate-y-px"
                   {...register("bio")}
@@ -336,19 +336,19 @@ export function RegisterForm() {
               htmlFor="terms"
               className="font-body text-body-md text-[14px] text-text-secondary leading-snug cursor-pointer select-none"
             >
-              I agree to the{" "}
+              {t("auth.agreeTo")}{" "}
               <a
                 href="#"
                 className="text-primary hover:underline underline-offset-2"
               >
-                Terms of Service
+                {t("auth.termsOfService")}
               </a>{" "}
-              and{" "}
+              {t("auth.and")}{" "}
               <a
                 href="#"
                 className="text-primary hover:underline underline-offset-2"
               >
-                Ethical Code
+                {t("auth.ethicalCode")}
               </a>
               .
             </label>
@@ -360,7 +360,7 @@ export function RegisterForm() {
             isLoading={registerMutation.isPending}
             className="h-12 w-full bg-primary-container text-background font-body text-label-caps uppercase tracking-widest text-[12px] rounded flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all ember-glow mt-6"
           >
-            <span>CREATE ACCOUNT</span>
+            <span>{t("auth.createAccountButton")}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </form>
@@ -368,12 +368,12 @@ export function RegisterForm() {
 
       {/* Redirection Link */}
       <p className="text-center mt-8 font-body text-body-md text-text-secondary">
-        Already have an account?{" "}
+        {t("auth.alreadyHaveAccount")}{" "}
         <Link
           to="/login"
           className="text-primary hover:underline underline-offset-4"
         >
-          Sign in
+          {t("nav.signIn")}
         </Link>
       </p>
     </div>

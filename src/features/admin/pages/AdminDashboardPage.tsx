@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { useI18n } from "@/i18n/i18n";
 import {
   useAdminStats,
   usePendingRegistrations,
@@ -71,6 +72,8 @@ function AdminTable<T extends { id: number }>({
   emptyDescription?: string;
   processingIds: Set<number>;
 }) {
+  const { t } = useI18n();
+
   if (loading && data.length === 0) {
     return (
       <div className="space-y-3">
@@ -110,7 +113,7 @@ function AdminTable<T extends { id: number }>({
                 </th>
               ))}
               <th className="px-4 py-3 text-right font-body text-label-caps uppercase tracking-widest text-text-secondary">
-                Actions
+                {t("admin.actions")}
               </th>
             </tr>
           </thead>
@@ -133,7 +136,7 @@ function AdminTable<T extends { id: number }>({
                       disabled={processingIds.has(item.id)}
                       onClick={() => onReject(item)}
                     >
-                      Reject
+                      {t("admin.reject")}
                     </Button>
                     <Button
                       variant="primary"
@@ -141,7 +144,7 @@ function AdminTable<T extends { id: number }>({
                       disabled={processingIds.has(item.id)}
                       onClick={() => onApprove(item)}
                     >
-                      {processingIds.has(item.id) ? "..." : "Approve"}
+                      {processingIds.has(item.id) ? t("common.loading") : t("admin.approve")}
                     </Button>
                   </div>
                 </td>
@@ -159,10 +162,13 @@ function AdminTable<T extends { id: number }>({
             disabled={page <= 0}
             onClick={() => onPageChange(page - 1)}
           >
-            Previous
+            {t("mentor.previous")}
           </Button>
           <span className="font-body text-code-sm text-text-secondary">
-            Page {page + 1} of {totalPages} ({totalElements} total)
+            {t("mentor.pageOfTotal")
+              .replace("{page}", String(page + 1))
+              .replace("{totalPages}", String(totalPages))
+              .replace("{total}", String(totalElements))}
           </span>
           <Button
             variant="secondary"
@@ -170,7 +176,7 @@ function AdminTable<T extends { id: number }>({
             disabled={page >= totalPages - 1}
             onClick={() => onPageChange(page + 1)}
           >
-            Next
+            {t("mentor.next")}
           </Button>
         </div>
       )}
@@ -191,6 +197,7 @@ function formatDate(dateString: string) {
 }
 
 export default function AdminDashboardPage() {
+  const { t } = useI18n();
   const [regPage, setRegPage] = useState(0);
   const [livePage, setLivePage] = useState(0);
   const [processingRegIds, setProcessingRegIds] = useState<Set<number>>(new Set());
@@ -270,38 +277,38 @@ export default function AdminDashboardPage() {
   return (
     <div className="mx-auto max-w-container px-gutter py-8">
       <h1 className="font-display text-display-lg-mobile italic text-text-primary md:text-display-lg">
-        Admin Dashboard
+        {t("admin.dashboard")}
       </h1>
       <p className="mt-2 font-body text-body-lg text-text-secondary">
-        Manage users, stacks, and platform settings
+        {t("admin.dashboardSubtitle")}
       </p>
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <StatCard label="Total Sessions" value={stats?.totalSessions} loading={statsLoading} />
-        <StatCard label="Active Mentors" value={stats?.activeMentors} loading={statsLoading} />
-        <StatCard label="Avg Platform Rating" value={stats?.averagePlatformRating != null ? stats.averagePlatformRating.toFixed(2) : "—"} loading={statsLoading} />
-        <StatCard label="Pending Registrations" value={stats?.pendingRegistrations} loading={statsLoading} />
-        <StatCard label="Pending Live Verifications" value={stats?.pendingLiveVerifications} loading={statsLoading} />
+        <StatCard label={t("admin.totalSessions")} value={stats?.totalSessions} loading={statsLoading} />
+        <StatCard label={t("admin.activeMentors")} value={stats?.activeMentors} loading={statsLoading} />
+        <StatCard label={t("admin.avgPlatformRating")} value={stats?.averagePlatformRating != null ? stats.averagePlatformRating.toFixed(2) : "—"} loading={statsLoading} />
+        <StatCard label={t("admin.pendingRegistrations")} value={stats?.pendingRegistrations} loading={statsLoading} />
+        <StatCard label={t("admin.pendingLiveVerifications")} value={stats?.pendingLiveVerifications} loading={statsLoading} />
       </div>
 
       <section className="mt-10">
         <h2 className="font-display text-headline-md italic text-text-primary">
-          New Mentor Applications
+          {t("admin.newMentorApplications")}
         </h2>
         <p className="mt-1 font-body text-body-md text-text-secondary">
-          Mentor registration requests that have not yet been verified.
+          {t("admin.newMentorApplicationsDesc")}
         </p>
         <div className="mt-4">
           <AdminTable
             columns={[
-              { header: "Name / Email", render: (item) => (
+              { header: t("student.nameEmail"), render: (item) => (
                 <div>
                   <div className="font-medium">{item.name}</div>
                   <div className="text-code-sm text-text-secondary">{item.email}</div>
                 </div>
               )},
-              { header: "Stack", render: (item) => item.stackName },
-              { header: "Applied", render: (item) => formatDate(item.appliedDate) },
+              { header: t("admin.stacks.title"), render: (item) => item.stackName },
+              { header: t("admin.applied"), render: (item) => formatDate(item.appliedDate) },
             ]}
             data={regData?.items ?? []}
             loading={regLoading}
@@ -311,8 +318,8 @@ export default function AdminDashboardPage() {
             onPageChange={setRegPage}
             onApprove={handleApproveRegistration}
             onReject={handleRejectRegistration}
-            emptyTitle="No pending registration requests"
-            emptyDescription="New mentor applications will appear here."
+            emptyTitle={t("admin.noPendingRegistrations")}
+            emptyDescription={t("admin.newMentorApplicationsAppear")}
             processingIds={processingRegIds}
           />
         </div>
@@ -320,22 +327,22 @@ export default function AdminDashboardPage() {
 
       <section className="mt-10">
         <h2 className="font-display text-headline-md italic text-text-primary">
-          Live Directory — Unverified Mentors
+          {t("admin.liveDirectoryUnverified")}
         </h2>
         <p className="mt-1 font-body text-body-md text-text-secondary">
-          Mentors in the live directory who are not yet available for booking.
+          {t("admin.liveDirectoryUnverifiedDesc")}
         </p>
         <div className="mt-4">
           <AdminTable
             columns={[
-              { header: "Name / Email", render: (item) => (
+              { header: t("student.nameEmail"), render: (item) => (
                 <div>
                   <div className="font-medium">{item.displayName}</div>
                   <div className="text-code-sm text-text-secondary">{item.email}</div>
                 </div>
               )},
-              { header: "Stack", render: (item) => item.stackName },
-              { header: "Rating", render: (item) =>
+              { header: t("admin.stacks.title"), render: (item) => item.stackName },
+              { header: t("mentor.sort.rating"), render: (item) =>
                 item.rating != null ? item.rating.toFixed(1) : "—"
               },
             ]}
@@ -347,8 +354,8 @@ export default function AdminDashboardPage() {
             onPageChange={setLivePage}
             onApprove={handleApproveLive}
             onReject={handleRejectLive}
-            emptyTitle="No pending live verifications"
-            emptyDescription="All mentors in the directory are available."
+            emptyTitle={t("admin.noPendingLiveVerifications")}
+            emptyDescription={t("admin.allMentorsAvailable")}
             processingIds={processingLiveIds}
           />
         </div>

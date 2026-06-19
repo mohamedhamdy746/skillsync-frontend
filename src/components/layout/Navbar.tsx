@@ -53,16 +53,16 @@ export function Navbar() {
                 {isAdmin && (
                   <>
                     <Link to="/admin" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors duration-200">
-                      Dashboard
+                      {t("nav.dashboard")}
                     </Link>
                     <Link to="/admin/mentors" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors duration-200">
-                      Mentors
+                      {t("nav.mentors")}
                     </Link>
                     <Link to="/admin/students" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors duration-200">
-                      Students
+                      {t("nav.students")}
                     </Link>
                     <Link to="/admin/stacks" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors duration-200">
-                      Stacks
+                      {t("nav.stacks")}
                     </Link>
                   </>
                 )}
@@ -86,18 +86,18 @@ export function Navbar() {
           </nav>
 
           {/* Trailing Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <button onClick={toggleLanguage}
-              className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary font-body text-label-caps uppercase tracking-widest text-[11px] transition-colors duration-200 border border-border/80 px-2 py-1 rounded"
+              className="flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 font-body text-label-caps text-xs tracking-widest text-text-secondary hover:border-ember hover:text-ember transition-colors duration-200"
               aria-label="Toggle language">
               <Globe className="h-3.5 w-3.5" />
               <span>{locale === "en" ? "العربية" : "English"}</span>
             </button>
 
             <button onClick={toggleTheme}
-              className="text-on-surface-variant hover:text-primary transition-colors duration-200"
+              className="flex items-center justify-center rounded-full border border-border bg-surface p-2 text-text-secondary hover:border-ember hover:text-ember transition-colors duration-200"
               aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}>
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
 
             {isAuthenticated ? (
@@ -137,19 +137,19 @@ export function Navbar() {
                 <>
                   <Link to="/admin" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}>
-                    Dashboard
+                    {t("nav.dashboard")}
                   </Link>
                   <Link to="/admin/mentors" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}>
-                    Mentors
+                    {t("nav.mentors")}
                   </Link>
                   <Link to="/admin/students" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}>
-                    Students
+                    {t("nav.students")}
                   </Link>
                   <Link to="/admin/stacks" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}>
-                    Stacks
+                    {t("nav.stacks")}
                   </Link>
                 </>
               )}

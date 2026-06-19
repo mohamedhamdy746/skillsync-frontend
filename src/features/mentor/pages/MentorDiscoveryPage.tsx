@@ -13,6 +13,7 @@ import { useDebounce } from "@/hooks";
 import { MentorCard } from "../components/MentorCard";
 import { useMentors } from "../hooks/useMentors";
 import { useStacks } from "../hooks/useStacks";
+import { useI18n } from "@/i18n/i18n";
 import type { MentorFilters } from "../types";
 
 const SORT_OPTIONS = [
@@ -31,6 +32,7 @@ function parseStackIds(value: string | null): number[] {
 }
 
 export default function MentorDiscoveryPage() {
+  const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState(searchParams.get("keyword") ?? "");
   const debouncedKeyword = useDebounce(searchInput, DEBOUNCE_MS);
@@ -95,26 +97,26 @@ export default function MentorDiscoveryPage() {
     <div className="mx-auto max-w-container px-gutter py-8">
       <header className="mb-8">
         <h1 className="font-display text-display-lg-mobile italic text-text-primary md:text-display-lg">
-          Find Your Mentor
+          {t("mentor.discover")}
         </h1>
         <p className="mt-2 font-body text-body-lg text-text-secondary">
-          Browse expert mentors and book code review sessions
+          {t("mentor.discoverSubtitle")}
         </p>
       </header>
 
       <section className="mb-6 space-y-4">
         <Input
-          label="Search mentors"
-          placeholder="Search by name, title, or stack..."
+          label={t("mentor.searchMentors")}
+          placeholder={t("mentor.searchPlaceholder")}
           value={searchInput}
           onChange={(event) => setSearchInput(event.target.value)}
-          aria-label="Search mentors"
+          aria-label={t("mentor.searchMentors")}
         />
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap gap-2">
             {stacksLoading ? (
-              <span className="text-sm text-text-secondary">Loading stacks...</span>
+              <span className="text-sm text-text-secondary">{t("mentor.loadingStacks")}</span>
             ) : (
               stacks.map((stack) => {
                 const active = stackIds.includes(stack.id);
@@ -136,7 +138,7 @@ export default function MentorDiscoveryPage() {
 
           <div className="flex items-center gap-2">
             <label htmlFor="mentor-sort" className="text-sm text-text-secondary">
-              Sort by
+              {t("mentor.sortBy")}
             </label>
             <select
               id="mentor-sort"
@@ -151,7 +153,7 @@ export default function MentorDiscoveryPage() {
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.label} value={option.value}>
-                  {option.label}
+                  {t("mentor.sort." + option.label.toLowerCase())}
                 </option>
               ))}
             </select>
@@ -162,8 +164,8 @@ export default function MentorDiscoveryPage() {
       {error && (
         <EmptyState
           icon={<Search className="h-10 w-10" />}
-          title="Unable to load mentors"
-          description="Please try again in a moment."
+          title={t("mentor.unableToLoad")}
+          description={t("mentor.tryAgainMoment")}
         />
       )}
 
@@ -178,8 +180,8 @@ export default function MentorDiscoveryPage() {
       {!error && !isLoading && mentors.length === 0 && (
         <EmptyState
           icon={<Users className="h-10 w-10" />}
-          title="No mentors found"
-          description="Try adjusting your search or stack filters."
+          title={t("mentor.noMentorsFound")}
+          description={t("mentor.adjustFilters")}
         />
       )}
 
@@ -199,10 +201,10 @@ export default function MentorDiscoveryPage() {
                 disabled={page <= 1 || isFetching}
                 onClick={() => updateParams({ page: String(page - 1) })}
               >
-                Previous
+                {t("mentor.previous")}
               </Button>
               <span className="text-sm text-text-secondary">
-                Page {page} of {totalPages}
+                {t("mentor.pageOf").replace("{page}", String(page)).replace("{totalPages}", String(totalPages))}
               </span>
               <Button
                 variant="secondary"
@@ -210,7 +212,7 @@ export default function MentorDiscoveryPage() {
                 disabled={page >= totalPages || isFetching}
                 onClick={() => updateParams({ page: String(page + 1) })}
               >
-                Next
+                {t("mentor.next")}
               </Button>
             </div>
           )}

@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/Card";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
 import { Modal } from "@/components/ui/Modal";
 import { Plus, Pencil, Trash2, X, Check } from "lucide-react";
+import { useI18n } from "@/i18n/i18n";
 
 interface FormState {
   name: string;
@@ -13,6 +14,7 @@ interface FormState {
 const emptyForm: FormState = { name: "", description: "" };
 
 export default function AdminStackListPage() {
+  const { t } = useI18n();
   const { data: stacks, isLoading } = useStackList();
   const createStack = useCreateStack();
   const updateStack = useUpdateStack();
@@ -56,10 +58,10 @@ export default function AdminStackListPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-display-lg-mobile italic text-text-primary md:text-display-lg">
-            Stacks
+            {t("admin.stacks.title")}
           </h1>
           <p className="mt-2 font-body text-body-lg text-text-secondary">
-            Manage technology stacks used across the platform
+            {t("admin.stacks.subtitle")}
           </p>
         </div>
         <button
@@ -67,29 +69,29 @@ export default function AdminStackListPage() {
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-body text-label-caps uppercase tracking-wider text-white hover:opacity-90 transition-opacity"
         >
           {showForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-          {showForm ? "Cancel" : "Add Stack"}
+          {showForm ? t("common.cancel") : t("admin.stacks.addStack")}
         </button>
       </div>
 
       {showForm && (
         <Card className="mt-6 p-6">
-          <h2 className="font-display text-headline-md italic text-text-primary">New Stack</h2>
+          <h2 className="font-display text-headline-md italic text-text-primary">{t("admin.stacks.newStack")}</h2>
           <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end">
             <div className="flex-1">
-              <label className="block font-body text-label-caps uppercase tracking-widest text-text-secondary mb-1">Name *</label>
+              <label className="block font-body text-label-caps uppercase tracking-widest text-text-secondary mb-1">{t("admin.stacks.nameRequired")}</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="e.g. Rust"
+                placeholder={t("admin.stacks.namePlaceholder")}
                 className="w-full rounded-lg border border-border bg-surface p-3 font-body text-body-md text-text-primary placeholder:text-text-disabled outline-none focus:border-primary"
               />
             </div>
             <div className="flex-1">
-              <label className="block font-body text-label-caps uppercase tracking-widest text-text-secondary mb-1">Description</label>
+              <label className="block font-body text-label-caps uppercase tracking-widest text-text-secondary mb-1">{t("admin.stacks.description")}</label>
               <input
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="e.g. Systems programming and performance"
+                placeholder={t("admin.stacks.descriptionPlaceholder")}
                 className="w-full rounded-lg border border-border bg-surface p-3 font-body text-body-md text-text-primary placeholder:text-text-disabled outline-none focus:border-primary"
               />
             </div>
@@ -98,7 +100,7 @@ export default function AdminStackListPage() {
               disabled={!form.name.trim() || createStack.isPending}
               className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-body text-label-caps uppercase tracking-wider text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
             >
-              {createStack.isPending ? "..." : "Create"}
+              {createStack.isPending ? t("common.loading") : t("admin.stacks.create")}
             </button>
           </div>
         </Card>
@@ -119,7 +121,7 @@ export default function AdminStackListPage() {
 
         {!isLoading && (!stacks || stacks.length === 0) && (
           <Card className="p-8 text-center">
-            <p className="font-body text-body-lg text-text-secondary">No stacks defined yet.</p>
+            <p className="font-body text-body-lg text-text-secondary">{t("admin.stacks.noStacks")}</p>
           </Card>
         )}
 
@@ -129,9 +131,9 @@ export default function AdminStackListPage() {
               <thead>
                 <tr className="border-b border-border bg-surface-container-low">
                   <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">ID</th>
-                  <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Name</th>
-                  <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Description</th>
-                  <th className="px-4 py-3 text-right font-body text-label-caps uppercase tracking-widest text-text-secondary">Actions</th>
+                  <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("auth.name")}</th>
+                  <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.description")}</th>
+                  <th className="px-4 py-3 text-right font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,7 +161,7 @@ export default function AdminStackListPage() {
                             <button
                               onClick={() => setEditingId(null)}
                               className="rounded-lg border border-border p-2 text-text-secondary hover:bg-surface-dim transition-colors"
-                              title="Cancel"
+                              title={t("common.cancel")}
                             >
                               <X className="h-4 w-4" />
                             </button>
@@ -167,7 +169,7 @@ export default function AdminStackListPage() {
                               onClick={() => handleUpdate(stack.id)}
                               disabled={!editForm.name.trim() || updateStack.isPending}
                               className="rounded-lg bg-primary p-2 text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
-                              title="Save"
+                              title={t("common.save")}
                             >
                               <Check className="h-4 w-4" />
                             </button>
@@ -184,14 +186,14 @@ export default function AdminStackListPage() {
                             <button
                               onClick={() => startEdit(stack)}
                               className="rounded-lg border border-border p-2 text-text-secondary hover:bg-surface-dim transition-colors"
-                              title="Edit"
+                              title={t("common.edit")}
                             >
                               <Pencil className="h-4 w-4" />
                             </button>
                             <button
                               onClick={() => setDeleteTarget({ id: stack.id, name: stack.name })}
                               className="rounded-lg border border-border p-2 text-error hover:bg-error/10 transition-colors"
-                              title="Delete"
+                              title={t("common.delete")}
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -209,24 +211,24 @@ export default function AdminStackListPage() {
       <Modal
         isOpen={deleteTarget !== null}
         onClose={() => setDeleteTarget(null)}
-        title="Delete Stack"
+        title={t("admin.stacks.deleteStack")}
       >
         <p className="font-body text-body-md text-text-secondary">
-          Are you sure you want to delete <strong className="text-text-primary">{deleteTarget?.name}</strong>? This action cannot be undone.
+          {t("admin.stacks.deleteConfirm").replace("{name}", deleteTarget?.name || "")}
         </p>
         <div className="mt-6 flex items-center justify-end gap-3">
           <button
             onClick={() => setDeleteTarget(null)}
             className="rounded-lg border border-border px-4 py-2.5 font-body text-label-caps uppercase tracking-wider text-text-secondary hover:bg-surface-dim transition-colors"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             onClick={() => deleteTarget && handleDelete(deleteTarget.id)}
             disabled={deleteStack.isPending}
             className="rounded-lg bg-error px-4 py-2.5 font-body text-label-caps uppercase tracking-wider text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
           >
-            {deleteStack.isPending ? "Deleting..." : "Delete"}
+            {deleteStack.isPending ? t("common.loading") : t("common.delete")}
           </button>
         </div>
       </Modal>

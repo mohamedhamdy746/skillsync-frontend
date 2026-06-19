@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import type { PaginatedResponse } from "@/lib/types";
 import type { Stack } from "@/features/mentor/types";
-import type { AdminUser, CreateStackPayload, UpdateStackPayload, UserStatusPayload } from "../types";
+import type { AdminUser, CreateStackPayload, UserStatusPayload } from "../types";
 
 export interface AdminRegistrationMentorResponse {
   id: number;

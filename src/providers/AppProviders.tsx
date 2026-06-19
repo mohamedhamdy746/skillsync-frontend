@@ -1,14 +1,23 @@
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { queryClient } from "@/lib/query-client";
 import { AuthInitializer } from "./AuthInitializer";
+import { useI18n } from "@/i18n/i18n";
 
 interface AppProvidersProps {
   children: ReactNode;
 }
 
 export function AppProviders({ children }: AppProvidersProps) {
+  const { locale } = useI18n();
+
+  useEffect(() => {
+    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthInitializer>

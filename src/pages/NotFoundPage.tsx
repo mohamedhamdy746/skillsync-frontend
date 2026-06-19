@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { useI18n } from "@/i18n/i18n";
 
 /**
  * NotFoundPage — 404 catch-all page.
  */
 export default function NotFoundPage() {
-  useDocumentTitle("404 — Page Not Found");
+  const { t } = useI18n();
+  useDocumentTitle(`404 — ${t("error.notFound")}`);
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
@@ -15,18 +17,18 @@ export default function NotFoundPage() {
       </span>
 
       <h1 className="mt-4 font-display text-display-lg-mobile italic text-text-primary md:text-display-lg">
-        Page Not Found
+        {t("error.notFound")}
       </h1>
 
       <p className="mt-3 max-w-md font-body text-body-lg text-text-secondary">
-        The page you&apos;re looking for doesn&apos;t exist or has been moved.
+        {t("error.notFoundSubtitle")}
       </p>
 
       <Link
         to="/"
         className="mt-8 inline-flex rounded bg-ember px-6 py-3 font-body text-body-md font-bold text-canvas transition-all hover:shadow-ember"
       >
-        Back to Home
+        {t("common.backToHome")}
       </Link>
     </div>
   );
