@@ -3,18 +3,20 @@ import { Link } from "react-router-dom";
 import { useAllStudents } from "../hooks/useAdmin";
 import { Card } from "@/components/ui/Card";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
+import { useI18n } from "@/i18n/i18n";
 
 export default function AdminStudentListPage() {
+  const { t } = useI18n();
   const [page, setPage] = useState(0);
   const { data, isLoading } = useAllStudents(page);
 
   return (
     <div className="mx-auto max-w-container px-gutter py-8">
       <h1 className="font-display text-display-lg-mobile italic text-text-primary md:text-display-lg">
-        All Students
+        {t("student.allStudents")}
       </h1>
       <p className="mt-2 font-body text-body-lg text-text-secondary">
-        View all students registered in the platform
+        {t("student.viewAllStudents")}
       </p>
 
       <div className="mt-8">
@@ -31,7 +33,7 @@ export default function AdminStudentListPage() {
 
         {!isLoading && (!data?.items || data.items.length === 0) && (
           <Card className="p-8 text-center">
-            <p className="font-body text-body-lg text-text-secondary">No students found.</p>
+            <p className="font-body text-body-lg text-text-secondary">{t("student.noStudentsFound")}</p>
           </Card>
         )}
 
@@ -41,8 +43,8 @@ export default function AdminStudentListPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border bg-surface-container-low">
-                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Name / Email</th>
-                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Total Sessions</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("student.nameEmail")}</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.sessions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,17 +73,20 @@ export default function AdminStudentListPage() {
                   disabled={page <= 0}
                   onClick={() => setPage(page - 1)}
                 >
-                  Previous
+                  {t("mentor.previous")}
                 </button>
                 <span className="font-body text-code-sm text-text-secondary">
-                  Page {page + 1} of {data.totalPages} ({data.totalElements} total)
+                  {t("mentor.pageOfTotal")
+                    .replace("{page}", String(page + 1))
+                    .replace("{totalPages}", String(data.totalPages))
+                    .replace("{total}", String(data.totalElements))}
                 </span>
                 <button
                   className="rounded-lg border border-border px-4 py-2 font-body text-body-md text-text-secondary hover:bg-surface-container-low disabled:opacity-40"
                   disabled={page >= data.totalPages - 1}
                   onClick={() => setPage(page + 1)}
                 >
-                  Next
+                  {t("mentor.next")}
                 </button>
               </div>
             )}

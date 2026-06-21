@@ -3,8 +3,10 @@ import { useStudentDetail } from "../hooks/useAdmin";
 import { Card } from "@/components/ui/Card";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
 import { ArrowLeft } from "lucide-react";
+import { useI18n } from "@/i18n/i18n";
 
 export default function AdminStudentDetailPage() {
+  const { t } = useI18n();
   const { id } = useParams<{ id: string }>();
   const studentId = Number(id);
   const { data: student, isLoading, error } = useStudentDetail(studentId);
@@ -23,10 +25,10 @@ export default function AdminStudentDetailPage() {
     return (
       <div className="mx-auto max-w-container px-gutter py-8">
         <Link to="/admin/students" className="inline-flex items-center gap-1.5 font-body text-body-md text-primary hover:underline">
-          <ArrowLeft className="h-4 w-4" /> Back to Students
+          <ArrowLeft className="h-4 w-4" /> {t("admin.backToStudents")}
         </Link>
         <Card className="mt-6 p-8 text-center">
-          <p className="font-body text-body-lg text-text-secondary">Student not found.</p>
+          <p className="font-body text-body-lg text-text-secondary">{t("student.notFound")}</p>
         </Card>
       </div>
     );
@@ -35,7 +37,7 @@ export default function AdminStudentDetailPage() {
   return (
     <div className="mx-auto max-w-container px-gutter py-8">
       <Link to="/admin/students" className="inline-flex items-center gap-1.5 font-body text-body-md text-primary hover:underline">
-        <ArrowLeft className="h-4 w-4" /> Back to Students
+        <ArrowLeft className="h-4 w-4" /> {t("admin.backToStudents")}
       </Link>
 
       <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -46,29 +48,29 @@ export default function AdminStudentDetailPage() {
           <p className="mt-1 font-body text-body-lg text-text-secondary">{student.email}</p>
         </div>
         <div className="text-right">
-          <span className="font-body text-label-caps uppercase tracking-widest text-text-secondary">Total Sessions</span>
+          <span className="font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.sessions")}</span>
           <p className="font-display text-headline-md italic text-text-primary">{student.totalSessions}</p>
         </div>
       </div>
 
       <section className="mt-10">
         <h2 className="font-display text-headline-md italic text-text-primary">
-          Session History ({student.sessions.length})
+          {t("admin.sessionHistory")} ({student.sessions.length})
         </h2>
         <div className="mt-4">
           {student.sessions.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="font-body text-body-lg text-text-secondary">No sessions yet.</p>
+              <p className="font-body text-body-lg text-text-secondary">{t("admin.noSessionsYet")}</p>
             </Card>
           ) : (
             <div className="overflow-x-auto rounded-xl border border-border">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border bg-surface-container-low">
-                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Mentor</th>
-                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Date</th>
-                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Status</th>
-                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">Description</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.mentor")}</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.date")}</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("mentor.sortBy")}</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.description")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +88,7 @@ export default function AdminStudentDetailPage() {
                           session.status === "SCHEDULED" ? "bg-info/10 text-info" :
                           "bg-warning/10 text-warning"
                         }`}>
-                          {session.status}
+                          {t("status." + session.status)}
                         </span>
                       </td>
                       <td className="px-4 py-3 font-body text-body-md text-text-secondary max-w-xs truncate">{session.description}</td>

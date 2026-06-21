@@ -36,3 +36,15 @@ export function useRegister() {
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
   });
 }
+
+/** Update profile mutation — updates name and refreshes store. */
+export function useUpdateProfile() {
+  const { setUser } = useAuthStore();
+
+  return useMutation({
+    mutationFn: (payload: { name: string }) => authApi.updateProfile(payload),
+    onSuccess: (user) => {
+      setUser(user);
+    },
+  });
+}

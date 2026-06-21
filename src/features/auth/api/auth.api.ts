@@ -23,3 +23,8 @@ export async function getProfile(): Promise<User> {
   const { data } = await apiClient.get<User>("/auth/profile");
   return data;
 }
+
+export async function updateProfile(payload: { name: string }): Promise<User> {
+  const { data } = await apiClient.put<User>("/auth/profile", payload);
+  return data;
+}

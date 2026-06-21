@@ -73,23 +73,23 @@ export function LoginForm() {
           SkillSync
         </Link>
         <h1 className="font-display text-[32px] leading-[1.2] italic text-text-primary mt-2">
-          Elevate your craft.
+          {t("auth.elevateYourCraft")}
         </h1>
       </div>
 
       {/* Login Card */}
       <div className="w-full max-w-[500px] rounded-xl border border-border p-8 lg:p-10 bg-surface/80 shadow-2xl backdrop-blur-sm">
         <h2 className="font-display text-[26px] font-semibold text-text-primary mb-2">
-          Welcome Back
+          {t("auth.welcomeBack")}
         </h2>
         <p className="font-body text-body-md text-text-secondary mb-8">
-          Sign in to continue to your Scholar's Workspace
+          {t("auth.signInWorkspace")}
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-6">
             <Input
-              label="Email Address"
+              label={t("auth.emailAddress")}
               type="email"
               placeholder="ada@analytical-engine.org"
               error={errors.email?.message}
@@ -97,7 +97,7 @@ export function LoginForm() {
             />
 
             <Input
-              label="Password"
+              label={t("auth.password")}
               type="password"
               placeholder="••••••••"
               error={errors.password?.message}
@@ -111,7 +111,7 @@ export function LoginForm() {
             isLoading={loginMutation.isPending}
             className="h-12 w-full bg-primary-container text-background font-body text-label-caps uppercase tracking-widest text-[12px] rounded flex items-center justify-center gap-2 hover:bg-opacity-90 transition-all ember-glow mt-6"
           >
-            <span>SIGN IN</span>
+            <span>{t("auth.signInButton")}</span>
             <ArrowRight className="h-4 w-4" />
           </Button>
         </form>
@@ -119,12 +119,12 @@ export function LoginForm() {
 
       {/* Redirection Link */}
       <p className="text-center mt-8 font-body text-body-md text-text-secondary">
-        New to the community?{" "}
+        {t("auth.newToCommunity")}{" "}
         <Link
           to="/register"
           className="text-primary hover:underline underline-offset-4"
         >
-          Create an account
+          {t("auth.createAccount")}
         </Link>
       </p>
     </div>

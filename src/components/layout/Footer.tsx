@@ -1,14 +1,8 @@
 import { Link } from "react-router-dom";
+import { useI18n } from "@/i18n/i18n";
 
-/**
- * Footer — matches the Academic Ember reference design.
- *
- * - Italic serif brand at 24px
- * - Copyright text
- * - Policy nav links with opacity hover
- * - surface-container-lowest background
- */
 export function Footer() {
+  const { t } = useI18n();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -24,7 +18,7 @@ export function Footer() {
             SkillSync
           </Link>
           <span className="text-[12px] text-secondary opacity-80 font-body">
-            © {currentYear} SkillSync.
+            {t("footer.copyright").replace("{year}", String(currentYear))}
           </span>
         </div>
 
@@ -34,25 +28,25 @@ export function Footer() {
             href="#"
             className="text-secondary font-body text-[13px] hover:text-primary-container transition-colors opacity-80 hover:opacity-100"
           >
-            Privacy Policy
+            {t("footer.privacy")}
           </a>
           <a
             href="#"
             className="text-secondary font-body text-[13px] hover:text-primary-container transition-colors opacity-80 hover:opacity-100"
           >
-            Terms of Service
+            {t("footer.terms")}
           </a>
           <a
             href="#"
             className="text-secondary font-body text-[13px] hover:text-primary-container transition-colors opacity-80 hover:opacity-100"
           >
-            Cookie Policy
+            {t("footer.cookie")}
           </a>
           <a
             href="#"
             className="text-secondary font-body text-[13px] hover:text-primary-container transition-colors opacity-80 hover:opacity-100"
           >
-            Contact Us
+            {t("footer.contact")}
           </a>
         </nav>
         </div>

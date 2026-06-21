@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { Badge, Card } from "@/components/ui";
+import { useI18n } from "@/i18n/i18n";
 import type { Mentor } from "../types";
 
 interface MentorCardProps {
@@ -8,6 +9,7 @@ interface MentorCardProps {
 }
 
 export function MentorCard({ mentor }: MentorCardProps) {
+  const { t } = useI18n();
   return (
     <Link to={`/mentors/${mentor.id}`} className="block h-full">
       <Card className="flex h-full flex-col transition-colors hover:border-ember/40">
@@ -30,12 +32,16 @@ export function MentorCard({ mentor }: MentorCardProps) {
               {stack.name}
             </Badge>
           ))}
-          {mentor.available && <Badge variant="success">Available</Badge>}
+          {mentor.available && <Badge variant="success">{t("mentor.available")}</Badge>}
         </div>
 
         <div className="flex items-center justify-between border-t border-border pt-4 text-sm">
-          <span className="text-text-secondary">{mentor.totalSessions} sessions</span>
-          <span className="font-semibold text-text-primary">${mentor.hourlyRate}/hr</span>
+          <span className="text-text-secondary">
+            {t("student.sessionsCount").replace("{count}", String(mentor.totalSessions))}
+          </span>
+          <span className="font-semibold text-text-primary">
+            {t("mentor.hourlyRate").replace("{rate}", String(mentor.hourlyRate))}
+          </span>
         </div>
       </Card>
     </Link>

@@ -87,13 +87,13 @@ export default function MentorProfilePage() {
                         className="mb-6 inline-flex items-center gap-2 text-sm text-text-secondary hover:text-ember"
                     >
                         <ArrowLeft className="h-4 w-4" />
-                        Back to discovery
+                        {t("mentor.backToDiscovery")}
                     </Link>
                 )}
                 <EmptyState
                     icon={<Users className="h-10 w-10" />}
-                    title="Mentor not found"
-                    description="This mentor profile may have been removed or is unavailable."
+                    title={t("mentor.notFound")}
+                    description={t("mentor.notFoundDesc")}
                 />
             </div>
         );
@@ -107,7 +107,7 @@ export default function MentorProfilePage() {
                     className="mb-6 inline-flex items-center gap-2 text-sm text-text-secondary hover:text-ember"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Back to discovery
+                    {t("mentor.backToDiscovery")}
                 </Link>
             )}
 
@@ -125,7 +125,7 @@ export default function MentorProfilePage() {
                                     className="ml-4 shrink-0"
                                 >
                                     <Edit2 className="h-4 w-4 mr-2" />
-                                    Edit Profile
+                                    {t("mentor.editProfile")}
                                 </Button>
                             )}
                         </div>
@@ -133,7 +133,7 @@ export default function MentorProfilePage() {
                         {isEditing ? (
                             <div className="mt-4 space-y-4 max-w-md">
                                 <Input
-                                    label="Title"
+                                    label={t("mentor.titleLabel")}
                                     value={formData.title}
                                     onChange={(e) =>
                                         setFormData({
@@ -168,12 +168,12 @@ export default function MentorProfilePage() {
                                         }
                                         className="accent-ember h-4 w-4"
                                     />
-                                    Available now
+                                    {t("mentor.availableNow")}
                                 </label>
                             ) : (
                                 mentor.available && (
                                     <Badge variant="success">
-                                        Available now
+                                        {t("mentor.availableNow")}
                                     </Badge>
                                 )
                             )}
@@ -187,7 +187,7 @@ export default function MentorProfilePage() {
                                 {mentor.rating.toFixed(1)}
                             </span>
                             <span className="text-sm text-text-secondary">
-                                rating
+                                {t("mentor.rating")}
                             </span>
                         </div>
                         <div className="flex items-center justify-between gap-4 text-text-primary">
@@ -209,17 +209,17 @@ export default function MentorProfilePage() {
                                     />
                                 ) : (
                                     <span className="text-2xl font-semibold">
-                                        ${mentor.hourlyRate}
+                                        {t("mentor.hourlyRateOnly").replace("{rate}", String(mentor.hourlyRate))}
                                     </span>
                                 )}
                             </div>
                             <span className="text-sm text-text-secondary whitespace-nowrap">
-                                / hour
+                                {t("mentor.perHour")}
                             </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-text-secondary mt-2">
                             <Users className="h-4 w-4" />
-                            {mentor.totalSessions} completed sessions
+                            {t("mentor.completedSessions").replace("{count}", String(mentor.totalSessions))}
                         </div>
                     </div>
                 </div>
@@ -227,7 +227,7 @@ export default function MentorProfilePage() {
 
             <section className="mt-8">
                 <h2 className="mb-3 text-lg font-semibold text-text-primary">
-                    About
+                    {t("mentor.about")}
                 </h2>
                 <Card>
                     {isEditing ? (
@@ -241,7 +241,7 @@ export default function MentorProfilePage() {
                                         bio: e.target.value,
                                     })
                                 }
-                                placeholder="Write about your experience..."
+                                placeholder={t("mentor.writeBioPlaceholder")}
                             />
                             <div className="flex gap-3 justify-end mt-4">
                                 <Button
@@ -250,7 +250,7 @@ export default function MentorProfilePage() {
                                     disabled={updateMentorMutation.isPending}
                                 >
                                     <X className="h-4 w-4 mr-2" />
-                                    Cancel
+                                    {t("common.cancel")}
                                 </Button>
                                 <Button
                                     onClick={handleSave}
@@ -258,8 +258,8 @@ export default function MentorProfilePage() {
                                 >
                                     <Check className="h-4 w-4 mr-2" />
                                     {updateMentorMutation.isPending
-                                        ? "Saving..."
-                                        : "Save Changes"}
+                                        ? t("mentor.saving")
+                                        : t("mentor.saveChanges")}
                                 </Button>
                             </div>
                         </div>

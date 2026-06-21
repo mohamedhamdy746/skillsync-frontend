@@ -76,9 +76,9 @@
   --shadow-ember: 0 0 20px 0 rgba(255, 94, 58, 0.15);
   --shadow-ember-md: 0 0 30px 0 rgba(255, 94, 58, 0.2);
 
-  --font-display: "Playfair Display", serif;
-  --font-body: "Hanken Grotesk", sans-serif;
-  --font-code: "Geist", monospace;
+  --font-display: "Cairo", sans-serif;
+  --font-body: "Cairo", sans-serif;
+  --font-code: "Cairo", sans-serif;
 
   --max-width-container: 1280px;
 }
@@ -86,6 +86,7 @@
 /* ─── Global Resets ────────────────────────────────────────────────── */
 
 @layer base {
+
   *,
   *::before,
   *::after {
@@ -225,4 +226,34 @@ a {
 
 [dir="rtl"] {
   text-align: right;
+  --font-display: "Cairo", sans-serif;
+  --font-body: "Cairo", sans-serif;
+}
+
+[dir="rtl"] body {
+  font-family: "Cairo", sans-serif;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+  font-family: "Cairo", sans-serif;
+  font-style: normal;
+}
+
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] label,
+[dir="rtl"] input,
+[dir="rtl"] button,
+[dir="rtl"] textarea,
+[dir="rtl"] select,
+[dir="rtl"] option,
+[dir="rtl"] table,
+[dir="rtl"] th,
+[dir="rtl"] td {
+  font-family: "Cairo", sans-serif;
 }

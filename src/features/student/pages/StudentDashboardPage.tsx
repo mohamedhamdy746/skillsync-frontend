@@ -5,6 +5,7 @@ import { Badge, Button, Card, EmptyState, Input, SkeletonCard } from "@/componen
 import { useSessions, useUpdateSession } from "@/features/session";
 import type { Session } from "@/features/session";
 import { useDebounce } from "@/hooks";
+import { useI18n } from "@/i18n/i18n";
 import type { ComponentProps } from "react";
 
 type BadgeVariant = NonNullable<ComponentProps<typeof Badge>["variant"]>;
@@ -16,6 +17,7 @@ function statusVariant(status: string): BadgeVariant {
 }
 
 export default function StudentDashboardPage() {
+  const { t } = useI18n();
   const { data, isLoading } = useSessions();
   const queryClient = useQueryClient();
   const [sessionId, setSessionId] = useState<string>("");
@@ -50,38 +52,37 @@ export default function StudentDashboardPage() {
       <header className="mb-8 flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <Clock3 className="h-6 w-6 text-ember" />
-          <h1 className="font-display text-3xl italic text-text-primary">Student Dashboard</h1>
+          <h1 className="font-display text-3xl italic text-text-primary">{t("student.dashboard")}</h1>
         </div>
         <p className="max-w-2xl text-sm text-text-secondary">
-          Track your review sessions, cancel or reschedule when plans change, and keep the audit
-          summary in view.
+          {t("student.dashboardSubtitle")}
         </p>
       </header>
 
       <section className="mb-8 grid gap-4 md:grid-cols-3">
         <Card>
-          <div className="text-sm text-text-secondary">Upcoming</div>
+          <div className="text-sm text-text-secondary">{t("student.upcoming")}</div>
           <div className="mt-2 text-3xl font-semibold text-text-primary">{upcoming.length}</div>
         </Card>
         <Card>
-          <div className="text-sm text-text-secondary">Completed</div>
+          <div className="text-sm text-text-secondary">{t("student.completed")}</div>
           <div className="mt-2 text-3xl font-semibold text-text-primary">{completed.length}</div>
         </Card>
         <Card>
-          <div className="text-sm text-text-secondary">Canceled</div>
+          <div className="text-sm text-text-secondary">{t("student.canceled")}</div>
           <div className="mt-2 text-3xl font-semibold text-text-primary">{canceled.length}</div>
         </Card>
       </section>
 
       <section className="mb-10">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-text-primary">Session actions</h2>
-          <span className="text-sm text-text-secondary">Select a session id to update</span>
+          <h2 className="text-lg font-semibold text-text-primary">{t("student.sessionActions")}</h2>
+          <span className="text-sm text-text-secondary">{t("student.selectSessionId")}</span>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
-          <Input label="Session ID" value={sessionId} onChange={(e) => setSessionId(e.target.value)} />
-          <Input label="Reschedule start" type="datetime-local" value={newStartTime} onChange={(e) => setNewStartTime(e.target.value)} />
-          <Input label="Notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Evaluation notes" />
+          <Input label={t("student.sessionId")} value={sessionId} onChange={(e) => setSessionId(e.target.value)} />
+          <Input label={t("student.rescheduleStart")} type="datetime-local" value={newStartTime} onChange={(e) => setNewStartTime(e.target.value)} />
+          <Input label={t("student.notes")} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t("student.evaluationNotes")} />
         </div>
         <div className="mt-4 flex flex-wrap gap-3">
           <Button
@@ -90,22 +91,22 @@ export default function StudentDashboardPage() {
             disabled={!sessionId || cancelMutation.isPending}
           >
             <CalendarX2 className="h-4 w-4" />
-            Cancel session
+            {t("student.cancelSession")}
           </Button>
           <Button
             onClick={() => rescheduleMutation.mutate()}
             disabled={!sessionId || !newStartTime || rescheduleMutation.isPending}
           >
             <RefreshCcw className="h-4 w-4" />
-            Reschedule
+            {t("student.reschedule")}
           </Button>
         </div>
       </section>
 
       <section className="space-y-8">
-        <SessionGroup title="Upcoming" sessions={upcoming} loading={isLoading} />
-        <SessionGroup title="Completed" sessions={completed} loading={isLoading} />
-        <SessionGroup title="Canceled" sessions={canceled} loading={isLoading} />
+        <SessionGroup title={t("student.upcoming")} rawTitle="Upcoming" sessions={upcoming} loading={isLoading} />
+        <SessionGroup title={t("student.completed")} rawTitle="Completed" sessions={completed} loading={isLoading} />
+        <SessionGroup title={t("student.canceled")} rawTitle="Canceled" sessions={canceled} loading={isLoading} />
       </section>
     </div>
   );
@@ -113,18 +114,23 @@ export default function StudentDashboardPage() {
 
 function SessionGroup({
   title,
+  rawTitle,
   sessions,
   loading,
 }: {
   title: string;
+  rawTitle: string;
   sessions: Session[];
   loading: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-base font-semibold text-text-primary">{title}</h3>
-        <span className="text-sm text-text-secondary">{sessions.length} sessions</span>
+        <span className="text-sm text-text-secondary">
+          {t("student.sessionsCount").replace("{count}", String(sessions.length))}
+        </span>
       </div>
       {loading ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -134,8 +140,8 @@ function SessionGroup({
       ) : sessions.length === 0 ? (
         <EmptyState
           icon={<ShieldAlert className="h-8 w-8" />}
-          title={`No ${title.toLowerCase()} sessions`}
-          description="This section fills once the backend returns scheduled review data."
+          title={t("student.noSessionsTitle").replace("{title}", title.toLowerCase())}
+          description={t("student.noSessionsDesc")}
         />
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
@@ -146,17 +152,19 @@ function SessionGroup({
                   <div className="text-lg font-medium text-text-primary">{session.mentorName}</div>
                   <div className="mt-1 text-sm text-text-secondary">{session.description}</div>
                 </div>
-                <Badge variant={statusVariant(session.status)}>{session.status}</Badge>
+                <Badge variant={statusVariant(session.status)}>
+                  {t("status." + session.status)}
+                </Badge>
               </div>
               <div className="mt-4 text-sm text-text-secondary">
                 {session.startTime} - {session.endTime}
               </div>
               {session.audit && (
                 <div className="mt-4 rounded border border-border bg-surface-container-highest/40 p-3 text-sm">
-                  <div className="font-medium text-text-primary">Audit</div>
+                  <div className="font-medium text-text-primary">{t("student.audit")}</div>
                   <div className="mt-1 text-text-secondary">
-                    {session.audit.status}
-                    {session.audit.predictedTag ? ` • ${session.audit.predictedTag}` : ""}
+                    {t("audit.status." + session.audit.status)}
+                    {session.audit.predictedTag ? ` • ${t("audit.tag." + session.audit.predictedTag)}` : ""}
                   </div>
                 </div>
               )}
