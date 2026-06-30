@@ -26,6 +26,7 @@ export interface Session {
   description: string;
   status: SessionStatus;
   evaluationNotes?: string | null;
+  meetingLink?: string | null;
   audit?: AuditLog | null;
 }
 

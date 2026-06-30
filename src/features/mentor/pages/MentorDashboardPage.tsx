@@ -1,4 +1,4 @@
-import { CalendarClock, CheckCircle2, FilePenLine, Hourglass } from "lucide-react";
+import { CalendarClock, CheckCircle2, FilePenLine, Hourglass, Video } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Badge, Button, Card, EmptyState, SkeletonCard } from "@/components/ui";
@@ -203,6 +203,23 @@ function SessionGroup({
               <div className="mt-4 text-sm text-text-secondary">
                 {formatSessionRange(session.startTime, session.endTime)}
               </div>
+              {session.status === "SCHEDULED" && session.meetingLink && (
+                <div className="mt-3 flex items-center justify-between gap-4 border-b border-border/40 pb-3">
+                  <div className="text-xs text-text-secondary flex items-center gap-1.5 font-body">
+                    <span className="inline-block h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    <span>{t("mentor.availableNow")}</span>
+                  </div>
+                  <a
+                    href={session.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded bg-ember text-canvas px-4 py-2 text-xs font-semibold hover:shadow-ember active:scale-[0.98] transition-all font-body"
+                  >
+                    <Video className="h-3.5 w-3.5" />
+                    <span>Join Meeting</span>
+                  </a>
+                </div>
+              )}
               <div className="mt-4 space-y-3">
                 <label
                   htmlFor={`evaluation-notes-${session.id}`}
