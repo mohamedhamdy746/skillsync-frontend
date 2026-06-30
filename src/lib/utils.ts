@@ -33,3 +33,10 @@ export function formatTime(date: Date | string): string {
     minute: "2-digit",
   });
 }
+
+/**
+ * Format a session range without exposing raw ISO timestamps.
+ */
+export function formatSessionRange(start: Date | string, end: Date | string): string {
+  return `${formatDate(start)} • ${formatTime(start)} - ${formatTime(end)}`;
+}

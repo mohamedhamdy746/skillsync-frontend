@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth.store";
 import * as authApi from "../api/auth.api";
 import type { LoginPayload, RegisterPayload } from "../types";
@@ -32,8 +32,18 @@ export function useLogin() {
 
 /** Register mutation. */
 export function useRegister() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "registrations"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "live"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allMentors"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allStudents"] });
+      queryClient.invalidateQueries({ queryKey: ["mentors"] });
+    },
   });
 }
 

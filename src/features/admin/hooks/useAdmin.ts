@@ -26,6 +26,8 @@ export function useUpdateUserStatus() {
     }) => adminApi.updateUserStatus(userId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allMentors"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allStudents"] });
     },
   });
 }
@@ -136,12 +138,19 @@ export function useUpdateRegistrationVerification() {
       }
       toast.error("Failed to update registration");
     },
-    onSuccess: () => {
-      toast.success("Registration updated");
+    onSuccess: (_data, variables) => {
+      toast.success(
+        variables.isVerified
+          ? "Mentor application approved"
+          : "Mentor application rejected and account blocked",
+      );
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "registrations"] });
       queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allMentors"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "mentorDetail"] });
+      queryClient.invalidateQueries({ queryKey: ["mentors"] });
     },
   });
 }
@@ -192,6 +201,9 @@ export function useUpdateLiveVerification() {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "live"] });
       queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allMentors"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "mentorDetail"] });
+      queryClient.invalidateQueries({ queryKey: ["mentors"] });
     },
   });
 }

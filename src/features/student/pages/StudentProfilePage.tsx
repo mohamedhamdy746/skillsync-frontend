@@ -7,7 +7,7 @@ import { useUpdateProfile } from "@/features/auth/hooks/useAuth";
 
 export default function StudentProfilePage() {
   const { t } = useI18n();
-  const { user, setUser } = useAuthStore();
+  const { user } = useAuthStore();
   const updateMutation = useUpdateProfile();
 
   const [isEditing, setIsEditing] = useState(false);

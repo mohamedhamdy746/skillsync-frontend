@@ -41,7 +41,7 @@ export function Navbar() {
           <nav className="hidden md:flex gap-8 items-center">
             {!isAdmin && (
               <Link
-                to="/"
+                to="/discover"
                 className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors duration-200"
               >
                 {t("nav.discover")}
@@ -125,7 +125,7 @@ export function Navbar() {
       <div className={cn("border-t border-outline-variant bg-surface-dim md:hidden", isMobileMenuOpen ? "block" : "hidden")}>
         <div className="flex flex-col gap-4 px-margin-mobile py-6">
           {!isAdmin && (
-            <Link to="/" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors"
+            <Link to="/discover" className="text-on-surface-variant font-body text-body-md hover:text-primary transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}>
               {t("nav.discover")}
             </Link>

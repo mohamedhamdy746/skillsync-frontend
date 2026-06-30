@@ -10,6 +10,9 @@ const RootLayout = lazy(() => import("@/components/layout/RootLayout"));
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
 const HomePage = lazy(() => import("@/pages/HomePage"));
+const MentorDiscoveryPage = lazy(
+  () => import("@/features/mentor/pages/MentorDiscoveryPage"),
+);
 const MentorProfilePage = lazy(
   () => import("@/features/mentor/pages/MentorProfilePage"),
 );
@@ -56,6 +59,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <HomePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/discover",
+        element: (
+          <Suspense fallback={<LoadingFallback />}>
+            <MentorDiscoveryPage />
           </Suspense>
         ),
       },

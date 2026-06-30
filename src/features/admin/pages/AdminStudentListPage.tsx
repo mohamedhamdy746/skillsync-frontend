@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAllStudents } from "../hooks/useAdmin";
+import { ShieldCheck, ShieldOff } from "lucide-react";
+import toast from "react-hot-toast";
+import { useAllStudents, useUpdateUserStatus } from "../hooks/useAdmin";
+import type { AdminStudentListResponse } from "../api/admin.api";
+import { Badge, Button } from "@/components/ui";
 import { Card } from "@/components/ui/Card";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
 import { useI18n } from "@/i18n/i18n";
@@ -8,7 +12,29 @@ import { useI18n } from "@/i18n/i18n";
 export default function AdminStudentListPage() {
   const { t } = useI18n();
   const [page, setPage] = useState(0);
+  const [processingUserId, setProcessingUserId] = useState<number | null>(null);
   const { data, isLoading } = useAllStudents(page);
+  const updateStatus = useUpdateUserStatus();
+
+  function changeStatus(student: AdminStudentListResponse, status: "APPROVED" | "BLOCKED") {
+    setProcessingUserId(student.userId);
+    updateStatus.mutate(
+      { userId: student.userId, payload: { status } },
+      {
+        onSuccess: () => {
+          toast.success(
+            status === "BLOCKED"
+              ? t("admin.users.blockedSuccess")
+              : t("admin.users.activatedSuccess"),
+          );
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || t("admin.users.updateFailed"));
+        },
+        onSettled: () => setProcessingUserId(null),
+      },
+    );
+  }
 
   return (
     <div className="mx-auto max-w-container px-gutter py-8">
@@ -44,24 +70,55 @@ export default function AdminStudentListPage() {
                 <thead>
                   <tr className="border-b border-border bg-surface-container-low">
                     <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("student.nameEmail")}</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.users.status")}</th>
                     <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.sessions")}</th>
+                    <th className="px-4 py-3 text-right font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.items.map((student) => (
-                    <tr
-                      key={student.id}
-                      className="border-b border-border last:border-b-0 transition-colors hover:bg-surface-container-low"
-                    >
-                      <td className="px-4 py-3">
-                        <Link to={`/admin/students/${student.id}`} className="block">
-                          <div className="font-medium text-text-primary">{student.displayName}</div>
-                          <div className="text-code-sm text-text-secondary">{student.email}</div>
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 font-body text-body-md text-text-primary">{student.totalSessions}</td>
-                    </tr>
-                  ))}
+                  {data.items.map((student) => {
+                    const isProcessing = processingUserId === student.userId;
+                    return (
+                      <tr
+                        key={student.id}
+                        className="border-b border-border last:border-b-0 transition-colors hover:bg-surface-container-low"
+                      >
+                        <td className="px-4 py-3">
+                          <Link to={`/admin/students/${student.id}`} className="block">
+                            <div className="font-medium text-text-primary">{student.displayName}</div>
+                            <div className="text-code-sm text-text-secondary">{student.email}</div>
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge variant={student.isBlocked ? "error" : "success"}>
+                            {student.isBlocked ? t("admin.users.blocked") : t("admin.users.active")}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 font-body text-body-md text-text-primary">{student.totalSessions}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={isProcessing || student.isBlocked}
+                              onClick={() => changeStatus(student, "BLOCKED")}
+                            >
+                              <ShieldOff className="h-4 w-4" />
+                              {t("admin.users.block")}
+                            </Button>
+                            <Button
+                              size="sm"
+                              disabled={isProcessing || !student.isBlocked}
+                              onClick={() => changeStatus(student, "APPROVED")}
+                            >
+                              <ShieldCheck className="h-4 w-4" />
+                              {isProcessing ? t("common.loading") : t("admin.users.activate")}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

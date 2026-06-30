@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api-client";
+import type { User } from "@/lib/types";
 
 /**
  * Student-specific API endpoints.
@@ -7,8 +8,8 @@ import { apiClient } from "@/lib/api-client";
  * Add student-specific endpoints here as needed.
  */
 
-/** Example: Fetch student-specific data if backend provides it. */
-export async function getStudentProfile(userId: number) {
-  const { data } = await apiClient.get(`/students/${userId}`);
+/** Fetch the current authenticated student's profile via the canonical profile endpoint. */
+export async function getStudentProfile(): Promise<User> {
+  const { data } = await apiClient.get<User>("/auth/profile");
   return data;
 }

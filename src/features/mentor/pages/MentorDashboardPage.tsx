@@ -1,11 +1,13 @@
 import { CalendarClock, CheckCircle2, FilePenLine, Hourglass } from "lucide-react";
 import { useState } from "react";
-import { Badge, Button, Card, EmptyState, Input, SkeletonCard } from "@/components/ui";
-import { useSessions, useUpdateSession } from "@/features/session";
+import toast from "react-hot-toast";
+import { Badge, Button, Card, EmptyState, SkeletonCard } from "@/components/ui";
+import { useSessions, useUpdateSessionById } from "@/features/session";
 import type { Session } from "@/features/session";
 import { AvailabilityEditor } from "../components/AvailabilityEditor";
 import { useAuthStore } from "@/stores/auth.store";
 import { useI18n } from "@/i18n/i18n";
+import { formatSessionRange } from "@/lib/utils";
 import type { ComponentProps } from "react";
 
 type BadgeVariant = NonNullable<ComponentProps<typeof Badge>["variant"]>;
@@ -16,18 +18,74 @@ function statusVariant(status: string): BadgeVariant {
   return "warning";
 }
 
+function errorMessage(error: unknown, fallback: string) {
+  if (error && typeof error === "object" && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+  }
+  return fallback;
+}
+
+function auditTagLabel(t: (key: string) => string, tag: string | null | undefined) {
+  if (!tag) return t("audit.topicPending");
+
+  const key = "audit.tag." + tag;
+  const translated = t(key);
+  if (translated !== key) return translated;
+
+  return tag
+    .toLowerCase()
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
 export default function MentorDashboardPage() {
   const { t } = useI18n();
   const { data, isLoading } = useSessions();
   const { user } = useAuthStore();
   const mentorId = user?.profileId ?? 0;
-  const [selectedId, setSelectedId] = useState("");
-  const [evaluationNotes, setEvaluationNotes] = useState("");
-  const updateMutation = useUpdateSession(Number(selectedId));
+  const [notesBySessionId, setNotesBySessionId] = useState<Record<number, string>>({});
+  const updateMutation = useUpdateSessionById();
 
   const sessions = data ?? [];
   const upcoming = sessions.filter((session) => session.status === "SCHEDULED");
   const completed = sessions.filter((session) => session.status === "COMPLETED");
+
+  const noteFor = (session: Session) =>
+    notesBySessionId[session.id] ?? session.evaluationNotes ?? "";
+
+  const setSessionNote = (sessionId: number, value: string) => {
+    setNotesBySessionId((current) => ({ ...current, [sessionId]: value }));
+  };
+
+  const saveNotes = (session: Session) => {
+    updateMutation.mutate(
+      {
+        sessionId: session.id,
+        payload: { evaluationNotes: noteFor(session) },
+      },
+      {
+        onSuccess: () => toast.success(t("mentor.notesSaved")),
+        onError: (error: unknown) => toast.error(errorMessage(error, t("mentor.notesSaveFailed"))),
+      },
+    );
+  };
+
+  const completeSession = (session: Session) => {
+    updateMutation.mutate(
+      {
+        sessionId: session.id,
+        payload: { evaluationNotes: noteFor(session), status: "COMPLETED" },
+      },
+      {
+        onSuccess: () => toast.success(t("mentor.sessionCompleted")),
+        onError: (error: unknown) => toast.error(errorMessage(error, t("mentor.sessionCompleteFailed"))),
+      },
+    );
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 md:px-8">
@@ -60,34 +118,29 @@ export default function MentorDashboardPage() {
         <AvailabilityEditor mentorId={mentorId} />
       </section>
 
-      <section className="mb-10">
-        <h2 className="mb-4 text-lg font-semibold text-text-primary">{t("mentor.evaluationTools")}</h2>
-        <div className="grid gap-4 md:grid-cols-[220px_1fr]">
-          <Input label={t("student.sessionId")} value={selectedId} onChange={(e) => setSelectedId(e.target.value)} />
-          <Input label={t("student.evaluationNotes")} value={evaluationNotes} onChange={(e) => setEvaluationNotes(e.target.value)} placeholder={t("mentor.evaluationPlaceholder")} />
-        </div>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Button
-            variant="secondary"
-            onClick={() => updateMutation.mutate({ evaluationNotes, status: "COMPLETED" })}
-            disabled={!selectedId || updateMutation.isPending}
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            {t("mentor.markComplete")}
-          </Button>
-          <Button
-            onClick={() => updateMutation.mutate({ evaluationNotes })}
-            disabled={!selectedId || !evaluationNotes || updateMutation.isPending}
-          >
-            <FilePenLine className="h-4 w-4" />
-            {t("mentor.saveNotes")}
-          </Button>
-        </div>
-      </section>
-
       <section className="space-y-8">
-        <SessionGroup title={t("student.upcoming")} rawTitle="Upcoming" sessions={upcoming} loading={isLoading} />
-        <SessionGroup title={t("student.completed")} rawTitle="Completed" sessions={completed} loading={isLoading} />
+        <SessionGroup
+          title={t("student.upcoming")}
+          sessions={upcoming}
+          loading={isLoading}
+          noteFor={noteFor}
+          onNoteChange={setSessionNote}
+          onSaveNotes={saveNotes}
+          onComplete={completeSession}
+          pendingSessionId={updateMutation.variables?.sessionId}
+          isPending={updateMutation.isPending}
+        />
+        <SessionGroup
+          title={t("student.completed")}
+          sessions={completed}
+          loading={isLoading}
+          noteFor={noteFor}
+          onNoteChange={setSessionNote}
+          onSaveNotes={saveNotes}
+          onComplete={completeSession}
+          pendingSessionId={updateMutation.variables?.sessionId}
+          isPending={updateMutation.isPending}
+        />
       </section>
     </div>
   );
@@ -95,14 +148,24 @@ export default function MentorDashboardPage() {
 
 function SessionGroup({
   title,
-  rawTitle,
   sessions,
   loading,
+  noteFor,
+  onNoteChange,
+  onSaveNotes,
+  onComplete,
+  pendingSessionId,
+  isPending,
 }: {
   title: string;
-  rawTitle: string;
   sessions: Session[];
   loading: boolean;
+  noteFor: (session: Session) => string;
+  onNoteChange: (sessionId: number, value: string) => void;
+  onSaveNotes: (session: Session) => void;
+  onComplete: (session: Session) => void;
+  pendingSessionId?: number;
+  isPending: boolean;
 }) {
   const { t } = useI18n();
   return (
@@ -138,13 +201,49 @@ function SessionGroup({
                 </Badge>
               </div>
               <div className="mt-4 text-sm text-text-secondary">
-                {session.startTime} - {session.endTime}
+                {formatSessionRange(session.startTime, session.endTime)}
+              </div>
+              <div className="mt-4 space-y-3">
+                <label
+                  htmlFor={`evaluation-notes-${session.id}`}
+                  className="font-body text-label-caps uppercase tracking-widest text-text-secondary"
+                >
+                  {t("student.evaluationNotes")}
+                </label>
+                <textarea
+                  id={`evaluation-notes-${session.id}`}
+                  value={noteFor(session)}
+                  onChange={(event) => onNoteChange(session.id, event.target.value)}
+                  placeholder={t("mentor.evaluationPlaceholder")}
+                  rows={3}
+                  className="w-full rounded bg-surface px-4 py-3 font-body text-body-md text-text-primary border-b-2 border-text-secondary/30 outline-none transition-all duration-200 placeholder:text-text-secondary/50 focus:border-ember"
+                />
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    variant="secondary"
+                    onClick={() => onSaveNotes(session)}
+                    disabled={isPending && pendingSessionId === session.id}
+                  >
+                    <FilePenLine className="h-4 w-4" />
+                    {t("mentor.saveNotes")}
+                  </Button>
+                  {session.status === "SCHEDULED" && (
+                    <Button
+                      onClick={() => onComplete(session)}
+                      disabled={isPending && pendingSessionId === session.id}
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {t("mentor.markComplete")}
+                    </Button>
+                  )}
+                </div>
               </div>
               <div className="mt-4 rounded border border-border bg-surface-container-highest/40 p-3 text-sm">
-                <div className="font-medium text-text-primary">{t("student.audit")}</div>
+                <div className="font-medium text-text-primary">{t("audit.topic")}</div>
                 <div className="mt-1 text-text-secondary">
-                  {t("audit.status." + (session.audit?.status ?? "PENDING"))}
-                  {session.audit?.predictedTag ? ` • ${t("audit.tag." + session.audit.predictedTag)}` : ""}
+                  {session.audit?.status === "FAILED"
+                    ? t("audit.topicUnavailable")
+                    : auditTagLabel(t, session.audit?.predictedTag)}
                 </div>
                 {session.audit?.errorMessage && (
                   <div className="mt-1 text-error">{session.audit.errorMessage}</div>
