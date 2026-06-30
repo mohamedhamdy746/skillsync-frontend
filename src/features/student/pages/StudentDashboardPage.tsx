@@ -104,9 +104,9 @@ export default function StudentDashboardPage() {
       </section>
 
       <section className="space-y-8">
-        <SessionGroup title={t("student.upcoming")} rawTitle="Upcoming" sessions={upcoming} loading={isLoading} />
-        <SessionGroup title={t("student.completed")} rawTitle="Completed" sessions={completed} loading={isLoading} />
-        <SessionGroup title={t("student.canceled")} rawTitle="Canceled" sessions={canceled} loading={isLoading} />
+        <SessionGroup title={t("student.upcoming")} sessions={upcoming} loading={isLoading} />
+        <SessionGroup title={t("student.completed")} sessions={completed} loading={isLoading} />
+        <SessionGroup title={t("student.canceled")} sessions={canceled} loading={isLoading} />
       </section>
     </div>
   );
@@ -114,12 +114,10 @@ export default function StudentDashboardPage() {
 
 function SessionGroup({
   title,
-  rawTitle,
   sessions,
   loading,
 }: {
   title: string;
-  rawTitle: string;
   sessions: Session[];
   loading: boolean;
 }) {

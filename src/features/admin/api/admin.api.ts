@@ -112,12 +112,14 @@ export async function getAdminStats(): Promise<AdminStatsResponse> {
 
 export interface AdminMentorListResponse {
   id: number;
+  userId: number;
   displayName: string;
   email: string;
   stackName: string;
   title: string;
   bio: string;
   available: boolean;
+  isBlocked: boolean;
   rating: number | null;
   hourlyRate: number;
   totalSessions: number;
@@ -130,8 +132,10 @@ export interface AdminMentorDetailResponse extends AdminMentorListResponse {
 
 export interface AdminStudentListResponse {
   id: number;
+  userId: number;
   displayName: string;
   email: string;
+  isBlocked: boolean;
   totalSessions: number;
 }
 

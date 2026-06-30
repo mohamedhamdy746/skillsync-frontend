@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAllMentors } from "../hooks/useAdmin";
+import { ShieldCheck, ShieldOff } from "lucide-react";
+import toast from "react-hot-toast";
+import { useAllMentors, useUpdateUserStatus } from "../hooks/useAdmin";
+import type { AdminMentorListResponse } from "../api/admin.api";
+import { Badge, Button } from "@/components/ui";
 import { Card } from "@/components/ui/Card";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
 import { useI18n } from "@/i18n/i18n";
@@ -8,7 +12,29 @@ import { useI18n } from "@/i18n/i18n";
 export default function AdminMentorListPage() {
   const { t } = useI18n();
   const [page, setPage] = useState(0);
+  const [processingUserId, setProcessingUserId] = useState<number | null>(null);
   const { data, isLoading } = useAllMentors(page);
+  const updateStatus = useUpdateUserStatus();
+
+  function changeStatus(mentor: AdminMentorListResponse, status: "APPROVED" | "BLOCKED") {
+    setProcessingUserId(mentor.userId);
+    updateStatus.mutate(
+      { userId: mentor.userId, payload: { status } },
+      {
+        onSuccess: () => {
+          toast.success(
+            status === "BLOCKED"
+              ? t("admin.users.blockedSuccess")
+              : t("admin.users.activatedSuccess"),
+          );
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || t("admin.users.updateFailed"));
+        },
+        onSettled: () => setProcessingUserId(null),
+      },
+    );
+  }
 
   return (
     <div className="mx-auto max-w-container px-gutter py-8">
@@ -50,33 +76,64 @@ export default function AdminMentorListPage() {
                     <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("mentor.sort.rating")}</th>
                     <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.rate")}</th>
                     <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("mentor.sortBy")}</th>
+                    <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.users.status")}</th>
                     <th className="px-4 py-3 text-left font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.sessions")}</th>
+                    <th className="px-4 py-3 text-right font-body text-label-caps uppercase tracking-widest text-text-secondary">{t("admin.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.items.map((mentor) => (
-                    <tr
-                      key={mentor.id}
-                      className="border-b border-border last:border-b-0 transition-colors hover:bg-surface-container-low"
-                    >
-                      <td className="px-4 py-3">
-                        <Link to={`/admin/mentors/${mentor.id}`} className="block">
-                          <div className="font-medium text-text-primary">{mentor.displayName}</div>
-                          <div className="text-code-sm text-text-secondary">{mentor.email}</div>
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 font-body text-body-md text-text-primary">{mentor.stackName}</td>
-                      <td className="px-4 py-3 font-body text-body-md text-text-secondary max-w-xs truncate">{mentor.title}</td>
-                      <td className="px-4 py-3 font-body text-body-md text-text-primary">{mentor.rating != null ? mentor.rating.toFixed(1) : "—"}</td>
-                      <td className="px-4 py-3 font-body text-body-md text-text-primary">{t("mentor.hourlyRate").replace("{rate}", String(mentor.hourlyRate))}</td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-label-caps uppercase tracking-wider ${mentor.available ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
-                          {mentor.available ? t("mentor.available") : t("mentor.unavailable")}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 font-body text-body-md text-text-primary">{mentor.totalSessions}</td>
-                    </tr>
-                  ))}
+                  {data.items.map((mentor) => {
+                    const isProcessing = processingUserId === mentor.userId;
+                    return (
+                      <tr
+                        key={mentor.id}
+                        className="border-b border-border last:border-b-0 transition-colors hover:bg-surface-container-low"
+                      >
+                        <td className="px-4 py-3">
+                          <Link to={`/admin/mentors/${mentor.id}`} className="block">
+                            <div className="font-medium text-text-primary">{mentor.displayName}</div>
+                            <div className="text-code-sm text-text-secondary">{mentor.email}</div>
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 font-body text-body-md text-text-primary">{mentor.stackName}</td>
+                        <td className="px-4 py-3 font-body text-body-md text-text-secondary max-w-xs truncate">{mentor.title}</td>
+                        <td className="px-4 py-3 font-body text-body-md text-text-primary">{mentor.rating != null ? mentor.rating.toFixed(1) : "—"}</td>
+                        <td className="px-4 py-3 font-body text-body-md text-text-primary">{t("mentor.hourlyRate").replace("{rate}", String(mentor.hourlyRate))}</td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-block rounded-full px-2.5 py-0.5 text-label-caps uppercase tracking-wider ${mentor.available ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
+                            {mentor.available ? t("mentor.available") : t("mentor.unavailable")}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Badge variant={mentor.isBlocked ? "error" : "success"}>
+                            {mentor.isBlocked ? t("admin.users.blocked") : t("admin.users.active")}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 font-body text-body-md text-text-primary">{mentor.totalSessions}</td>
+                        <td className="px-4 py-3">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={isProcessing || mentor.isBlocked}
+                              onClick={() => changeStatus(mentor, "BLOCKED")}
+                            >
+                              <ShieldOff className="h-4 w-4" />
+                              {t("admin.users.block")}
+                            </Button>
+                            <Button
+                              size="sm"
+                              disabled={isProcessing || !mentor.isBlocked}
+                              onClick={() => changeStatus(mentor, "APPROVED")}
+                            >
+                              <ShieldCheck className="h-4 w-4" />
+                              {isProcessing ? t("common.loading") : t("admin.users.activate")}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

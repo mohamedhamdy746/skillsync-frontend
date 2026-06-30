@@ -26,6 +26,8 @@ export function useUpdateUserStatus() {
     }) => adminApi.updateUserStatus(userId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allMentors"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "allStudents"] });
     },
   });
 }

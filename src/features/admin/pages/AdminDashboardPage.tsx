@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Layers, Users } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Skeleton, SkeletonLine } from "@/components/ui/Skeleton";
@@ -289,6 +291,23 @@ export default function AdminDashboardPage() {
         <StatCard label={t("admin.avgPlatformRating")} value={stats?.averagePlatformRating != null ? stats.averagePlatformRating.toFixed(2) : "—"} loading={statsLoading} />
         <StatCard label={t("admin.pendingRegistrations")} value={stats?.pendingRegistrations} loading={statsLoading} />
         <StatCard label={t("admin.pendingLiveVerifications")} value={stats?.pendingLiveVerifications} loading={statsLoading} />
+      </div>
+
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Link
+          to="/admin/mentors"
+          className="inline-flex items-center gap-2 rounded border border-text-secondary px-4 py-2.5 font-body text-body-md text-text-primary transition-colors hover:border-ember hover:text-ember"
+        >
+          <Users className="h-4 w-4" />
+          {t("admin.allMentors")}
+        </Link>
+        <Link
+          to="/admin/stacks"
+          className="inline-flex items-center gap-2 rounded border border-text-secondary px-4 py-2.5 font-body text-body-md text-text-primary transition-colors hover:border-ember hover:text-ember"
+        >
+          <Layers className="h-4 w-4" />
+          {t("admin.stacks.title")}
+        </Link>
       </div>
 
       <section className="mt-10">
